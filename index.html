@@ -291,6 +291,19 @@
   .love-name { font-size: 0.92rem; font-weight: 500; color: var(--ivory); }
   .love-desc { font-size: 0.77rem; color: var(--text-dim); }
   .love-drag { color: var(--text-dim); font-size: 20px; }
+  .love-arrows {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .love-arrow {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold-light);
+    border-radius: 6px; width: 32px; height: 28px;
+    font-size: 12px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .love-arrow:hover { background: var(--gold-faint); }
+  .love-arrow:active { transform: scale(0.92); }
 
   /* ─── STERNBERG ─── */
   .sternberg-visual {
@@ -320,7 +333,10 @@
     font-family: 'Playfair Display', serif;
     font-size: 1.15rem; color: var(--ivory); margin-bottom: 10px;
   }
-  #constellation-canvas { display: block; margin: 0 auto; border-radius: 10px; }
+  #constellation-canvas {
+    display: block; margin: 0 auto; border-radius: 10px;
+    width: 100%; max-width: 560px; height: auto;
+  }
   .star-map-label {
     font-size: 0.82rem; color: var(--text-dim);
     margin-top: 14px; font-style: italic;
@@ -442,8 +458,17 @@
     font-size: 1.1rem; color: var(--ivory); margin-bottom: 14px;
   }
 
+  /* ─── IMPRESIÓN ─── */
+  .print-only { display: none; }
+
   @media print {
     #stars-canvas, .progress-bar-wrap, .btn, .btn-row, .generate-btn-wrap { display: none !important; }
+    textarea, .check-grid, .cards-pick, .love-rank, .sternberg-visual,
+    .slider-wrap, #constellation-canvas, #star-map-container { display: none !important; }
+    .print-only {
+      display: block !important; white-space: pre-wrap;
+      border: 1px solid #ccc; padding: 10px; border-radius: 6px; margin-top: 6px;
+    }
     body { background: white; color: #111; }
     .hero h1 { color: #111; }
     #summary-output { border: 1px solid #ccc; color: #333; }
@@ -576,8 +601,8 @@
       <p class="cite">📖 Chapman, G. (1992). <em>Los 5 Lenguajes del Amor.</em> Northfield Publishing. · Bunt, S. & Hazelwood, Z.J. (2017). "Walking the walk, talking the talk." <em>Journal of Sex & Marital Therapy, 43(5)</em>.</p>
     </div>
 
-    <label class="field-label">Arrastra para ordenar los 5 lenguajes del amor de mayor (1) a menor (5) importancia para ti al <em>recibirlos</em>.</label>
-    <p class="field-hint">Sostén y arrastra cada tarjeta para reordenar.</p>
+    <label class="field-label">Ordena los 5 lenguajes del amor de mayor (1) a menor (5) importancia para ti al <em>recibirlos</em>.</label>
+    <p class="field-hint">En computador puedes arrastrar las tarjetas. En celular, usa las flechas ▲▼ para mover cada tarjeta hacia arriba o abajo.</p>
 
     <div class="love-rank" id="love-rank">
       <div class="love-item" draggable="true" data-lang="Palabras de afirmación">
@@ -586,7 +611,10 @@
           <div class="love-name">Palabras de afirmación</div>
           <div class="love-desc">Elogios verbales, "te amo", palabras de aliento</div>
         </div>
-        <div class="love-drag">⠿</div>
+        <div class="love-arrows">
+          <button class="love-arrow" onclick="moveLove(this,-1)">▲</button>
+          <button class="love-arrow" onclick="moveLove(this,1)">▼</button>
+        </div>
       </div>
       <div class="love-item" draggable="true" data-lang="Tiempo de calidad">
         <div class="love-rank-num">2</div>
@@ -594,7 +622,10 @@
           <div class="love-name">Tiempo de calidad</div>
           <div class="love-desc">Atención plena, momentos compartidos con presencia real</div>
         </div>
-        <div class="love-drag">⠿</div>
+        <div class="love-arrows">
+          <button class="love-arrow" onclick="moveLove(this,-1)">▲</button>
+          <button class="love-arrow" onclick="moveLove(this,1)">▼</button>
+        </div>
       </div>
       <div class="love-item" draggable="true" data-lang="Actos de servicio">
         <div class="love-rank-num">3</div>
@@ -602,7 +633,10 @@
           <div class="love-name">Actos de servicio</div>
           <div class="love-desc">Ayudar, hacer cosas que alivian tu carga diaria</div>
         </div>
-        <div class="love-drag">⠿</div>
+        <div class="love-arrows">
+          <button class="love-arrow" onclick="moveLove(this,-1)">▲</button>
+          <button class="love-arrow" onclick="moveLove(this,1)">▼</button>
+        </div>
       </div>
       <div class="love-item" draggable="true" data-lang="Contacto físico">
         <div class="love-rank-num">4</div>
@@ -610,7 +644,10 @@
           <div class="love-name">Contacto físico</div>
           <div class="love-desc">Abrazos, tomarse de la mano, presencia corporal</div>
         </div>
-        <div class="love-drag">⠿</div>
+        <div class="love-arrows">
+          <button class="love-arrow" onclick="moveLove(this,-1)">▲</button>
+          <button class="love-arrow" onclick="moveLove(this,1)">▼</button>
+        </div>
       </div>
       <div class="love-item" draggable="true" data-lang="Regalos">
         <div class="love-rank-num">5</div>
@@ -618,7 +655,10 @@
           <div class="love-name">Regalos</div>
           <div class="love-desc">Detalles pensados, gestos que dicen "me acordé de ti"</div>
         </div>
-        <div class="love-drag">⠿</div>
+        <div class="love-arrows">
+          <button class="love-arrow" onclick="moveLove(this,-1)">▲</button>
+          <button class="love-arrow" onclick="moveLove(this,1)">▼</button>
+        </div>
       </div>
     </div>
 
@@ -844,7 +884,7 @@
   <div id="star-map-container">
     <h3>Tu Constelación de Conexión</h3>
     <p style="font-size:0.83rem; color:var(--text-dim); margin-bottom:20px;">Cada estrella representa una dimensión de lo que quieres construir. A medida que completes los módulos, tu constelación se ilumina.</p>
-    <canvas id="constellation-canvas" width="560" height="290"></canvas>
+    <canvas id="constellation-canvas"></canvas>
     <p class="star-map-label" id="constellation-label">Completa los módulos para iluminar tu constelación ✦</p>
   </div>
 
@@ -860,7 +900,7 @@
     <div class="summary-title">Mi futuro Life Partner</div>
     <p class="summary-sub">Tu perfil personalizado, construido desde tus respuestas.</p>
     <div class="ai-thinking" id="ai-thinking">
-      Tejiendo tu perfil con IA<div class="ai-dots"><span></span><span></span><span></span></div>
+      Tejiendo tu perfil<div class="ai-dots"><span></span><span></span><span></span></div>
     </div>
     <div id="summary-output">
       <div class="summary-placeholder">Tu perfil aparecerá aquí una vez que hagas clic en "Generar mi perfil de pareja".</div>
@@ -868,7 +908,7 @@
 
     <div class="btn-row">
       <button class="btn btn-gold" onclick="copyToClipboard()">📋 Copiar al portapapeles</button>
-      <button class="btn btn-outline" onclick="window.print()">🖨️ Imprimir / Guardar como PDF</button>
+      <button class="btn btn-outline" onclick="prepareForPrint();window.print()">🖨️ Imprimir / Guardar como PDF</button>
       <button class="btn btn-teal" onclick="downloadTxt()">⬇️ Descargar como .txt</button>
     </div>
   </div>
@@ -934,7 +974,21 @@ function togglePick(el,groupId,multi){
 // ─── CHECK ───
 function toggleCheck(el){ el.classList.toggle('active'); }
 
-// ─── DRAG LOVE LANGUAGES ───
+// ─── REORDENAR LENGUAJES DEL AMOR (FLECHAS, FUNCIONA EN CELULAR) ───
+function moveLove(btn, dir){
+  const item = btn.closest('.love-item');
+  const parent = item.parentNode;
+  if(dir === -1 && item.previousElementSibling){
+    parent.insertBefore(item, item.previousElementSibling);
+  } else if(dir === 1 && item.nextElementSibling){
+    parent.insertBefore(item.nextElementSibling, item);
+  }
+  updateLoveNums();
+  autoSave();
+  updateProgress();
+}
+
+// ─── DRAG LOVE LANGUAGES (SOLO COMPUTADOR) ───
 let dragSrc=null;
 document.querySelectorAll('.love-item').forEach(item=>{
   item.addEventListener('dragstart',function(e){ dragSrc=this; this.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
@@ -990,11 +1044,17 @@ function updateProgress(){
   drawConstellation(mDone);
 }
 
-// ─── CONSTELACIÓN ───
+// ─── CONSTELACIÓN (RESPONSIVA) ───
 function drawConstellation(filled){
   const canvas=document.getElementById('constellation-canvas');
   const ctx=canvas.getContext('2d');
-  const W=canvas.width, H=canvas.height;
+
+  const displayWidth = canvas.parentElement.clientWidth - 20;
+  const W = Math.max(260, Math.min(560, displayWidth));
+  const H = W * (290/560);
+  canvas.width = W;
+  canvas.height = H;
+
   ctx.clearRect(0,0,W,H);
 
   const pts=[
@@ -1015,6 +1075,8 @@ function drawConstellation(filled){
     ctx.lineWidth=lit?1.5:0.8; ctx.stroke();
   });
 
+  const fontSize = W < 400 ? 9 : 11;
+
   pts.forEach(p=>{
     const lit=completedModules.has(p.mod);
     if(lit){
@@ -1025,7 +1087,7 @@ function drawConstellation(filled){
     ctx.beginPath(); ctx.arc(p.x,p.y,lit?7.5:3.5,0,Math.PI*2);
     ctx.fillStyle=lit?'#C9A84C':'rgba(201,168,76,0.22)'; ctx.fill();
     ctx.fillStyle=lit?'rgba(232,203,122,0.92)':'rgba(154,144,128,0.45)';
-    ctx.font=lit?'500 11px Inter':'300 10px Inter'; ctx.textAlign='center';
+    ctx.font=(lit?'500 ':'300 ')+fontSize+'px Inter'; ctx.textAlign='center';
     ctx.fillText(p.label,p.x,p.y-13);
   });
 
@@ -1033,6 +1095,7 @@ function drawConstellation(filled){
   document.getElementById('constellation-label').textContent=lbl;
 }
 drawConstellation(0);
+window.addEventListener('resize', ()=> drawConstellation(completedModules.size));
 
 // ─── AUTO SAVE ───
 function autoSave(){
@@ -1087,6 +1150,30 @@ function gatherData(){
     sv('values-nonneg',d.innegociables); sv('values-dealbreak',d.dealbreakers);
     sv('gottman-conflict',d.manejo_conflictos); sv('gottman-sunday',d.domingo_ideal);
     sv('gottman-complete',d.carta_pareja);
+
+    if(d.estilo_apego){
+      const card=document.querySelector(`#attachment-pick .pick-card[data-val="${d.estilo_apego}"]`);
+      if(card) card.classList.add('selected');
+    }
+    if(Array.isArray(d.experiencias)){
+      document.querySelectorAll('#experiences-check .check-item').forEach(item=>{
+        if(d.experiencias.includes(item.querySelector('span').textContent)) item.classList.add('active');
+      });
+    }
+    if(Array.isArray(d.fortalezas)){
+      document.querySelectorAll('#values-check .check-item').forEach(item=>{
+        if(d.fortalezas.includes(item.querySelector('span').textContent)) item.classList.add('active');
+      });
+    }
+    if(Array.isArray(d.lenguajes_amor) && d.lenguajes_amor.length===5){
+      const container=document.getElementById('love-rank');
+      d.lenguajes_amor.forEach(lang=>{
+        const item=container.querySelector(`.love-item[data-lang="${lang}"]`);
+        if(item) container.appendChild(item);
+      });
+      updateLoveNums();
+    }
+
     const slMap={'sl-independence':d.independencia,'sl-intimacy':d.sternberg_intimidad,'sl-passion':d.sternberg_pasion,'sl-commitment':d.sternberg_compromiso,'sl-friendship':d.amistad_profunda,'sl-rituals':d.rituales,'sl-repair':d.reparacion,'sl-dreams':d.suenos_compartidos};
     Object.entries(slMap).forEach(([id,val])=>{
       const el=document.getElementById(id); if(el&&val){ el.value=val; const vi=id.replace('sl-','sv-'); if(document.getElementById(vi)) document.getElementById(vi).textContent=val; }
@@ -1095,66 +1182,146 @@ function gatherData(){
   }catch(e){}
 })();
 
-// ─── GENERAR PERFIL CON IA ───
-async function generateSummary(){
+// ─── PLANTILLAS PARA PERFIL (SIN IA, FUNCIONA SIEMPRE) ───
+const PLANTILLAS = {
+  apego: {
+    Seguro: "Vas a construir con alguien que te haga sentir en casa desde el primer momento — esa sensación de poder bajar la guardia, de no tener que estar 'lista para defenderte'. Tu estilo seguro es una base hermosa: te permite recibir amor sin sospecha y darlo sin miedo.",
+    Ansioso: "Tu corazón sabe buscar cercanía, y eso no es una debilidad — es una capacidad enorme de vincularte. Lo que necesitas es una persona cuya presencia sea constante, que no te haga dudar, que entienda que la tranquilidad se construye con consistencia, no con promesas.",
+    Evitativo: "Valoras profundamente tu espacio y tu independencia, y eso está bien. Tu pareja ideal entiende que la cercanía no tiene que ser invasiva, que el amor también se construye respetando el silencio y el tiempo propio — sin que eso signifique distancia emocional.",
+    Desorganizado: "Tu historia te ha enseñado a protegerte de maneras distintas según el momento, y eso también es parte de tu fuerza. Mereces a alguien paciente, que no se asuste ante tus contradicciones, y con quien — poco a poco — puedas construir un patrón nuevo, más estable.",
+    "": "Sea cual sea tu forma de vincularte, mereces una relación donde te sientas en calma, no en alerta."
+  },
+  cierre: [
+    "Guarda este perfil. Vuelve a él cuando dudes de lo que mereces. No es una lista de exigencias — es un mapa de tu propio corazón.",
+    "Esto que acabas de escribir no es una fantasía: es información valiosísima sobre ti misma. Tu trabajo ahora es no conformarte con menos de lo que aquí describiste.",
+    "Lo que escribiste aquí es tuyo. Es tu brújula. Y cada vez que algo en tu vida se aleje demasiado de esto, ya sabes — es momento de mirar de nuevo hacia tu centro."
+  ]
+};
+
+function parrafoOVacio(texto, siHay, siNoHay){
+  return (texto && texto.trim().length>0) ? siHay.replace('{texto}', texto.trim()) : siNoHay;
+}
+
+function generarPerfilTexto(d){
+  const partes=[];
+
+  // 1. Base emocional
+  partes.push("── La base emocional de tu relación ──\n");
+  partes.push(PLANTILLAS.apego[d.estilo_apego] || PLANTILLAS.apego[""]);
+  if(d.sensacion_seguridad){
+    partes.push(`\nTú misma lo describiste así: "${d.sensacion_seguridad.trim()}" — esa es exactamente la sensación que tu futura pareja debe ayudarte a sentir, todos los días.`);
+  }
+  if(d.respuesta_dificil){
+    partes.push(`\nY cuando las cosas se pongan difíciles, necesitas a alguien que responda así: "${d.respuesta_dificil.trim()}"`);
+  }
+  const indep = parseInt(d.independencia||5);
+  if(indep<=4) partes.push("\nBuscas una relación con mucha fusión y cercanía — días compartidos, presencia constante, sentir que van juntos en casi todo.");
+  else if(indep>=7) partes.push("\nValoras tu independencia y buscas una relación donde cada uno tenga su propio espacio, sus propios proyectos y su propio mundo, sin que eso reste cercanía.");
+  else partes.push("\nBuscas un balance entre la cercanía y la independencia — ni fusión total, ni distancia, sino un punto medio cómodo para ambos.");
+
+  // 2. Lenguajes del amor
+  partes.push("\n\n── Cómo te ama (y cómo quieres ser amada) ──\n");
+  if(d.lenguajes_amor && d.lenguajes_amor.length>0){
+    partes.push(`El orden en que pusiste los lenguajes del amor dice mucho: lo más importante para ti es ${d.lenguajes_amor[0].toLowerCase()}, seguido de ${d.lenguajes_amor[1].toLowerCase()}. Tu pareja necesita aprender a hablar especialmente estos dos lenguajes — no los que a ella le resulten más fáciles, sino los que TÚ realmente recibes como amor.`);
+  }
+  if(d.momento_amor){
+    partes.push(`\nDescribiste este momento cotidiano como clave: "${d.momento_amor.trim()}" — ese tipo de detalle, repetido en el día a día, vale más que cualquier gran gesto ocasional.`);
+  }
+  if(d.recuerdo_amor){
+    partes.push(`\nY recuerda esto: "${d.recuerdo_amor.trim()}" — esa sensación es posible de nuevo, y mereces que sea frecuente, no excepcional.`);
+  }
+
+  // 3. Sternberg
+  partes.push("\n\n── La forma de amor que buscas ──\n");
+  const i=parseInt(d.sternberg_intimidad||7), p=parseInt(d.sternberg_pasion||7), c=parseInt(d.sternberg_compromiso||7);
+  const max = Math.max(i,p,c);
+  let foco="";
+  if(max===c && c>=i && c>=p) foco="el compromiso — la certeza de que alguien se queda, de que hay un 'nosotros' a largo plazo";
+  else if(max===i && i>=p) foco="la intimidad — esa cercanía emocional profunda, esa amistad de fondo";
+  else foco="la pasión — esa chispa, esa atracción viva que mantiene la relación encendida";
+  partes.push(`De los tres pilares del amor según Sternberg, lo que más resuena contigo es ${foco}. Eso no significa que los otros dos no importen — significa que sin esto, la relación se siente incompleta para ti.`);
+  if(d.vision_compromiso){
+    partes.push(`\nPara ti, el compromiso real se ve así: "${d.vision_compromiso.trim()}"`);
+  }
+
+  // 4. Auto-expansión
+  partes.push("\n\n── En quién te conviertes a su lado ──\n");
+  if(d.en_quien_me_convierto){
+    partes.push(`Quieres convertirte en alguien ${d.en_quien_me_convierto.trim().toLowerCase().startsWith('más')? d.en_quien_me_convierto.trim().toLowerCase() : 'así: ' + d.en_quien_me_convierto.trim()}. Tu pareja ideal no solo no te aleja de esa versión de ti — te impulsa hacia ella.`);
+  }
+  if(d.cualidades_pareja){
+    partes.push(`\nY quieres que esta persona traiga a tu vida: ${d.cualidades_pareja.trim()}`);
+  }
+  if(d.experiencias && d.experiencias.length>0){
+    partes.push(`\nJuntos, sueñan con: ${d.experiencias.join(', ').toLowerCase()}.`);
+  }
+
+  // 5. Valores
+  partes.push("\n\n── Lo que esta persona representa ──\n");
+  if(d.fortalezas && d.fortalezas.length>0){
+    partes.push(`Las fortalezas que más valoras en una pareja son: ${d.fortalezas.join(', ').toLowerCase()}. Estas no son listas de deseos — son los pilares sobre los que se sostiene el respeto mutuo.`);
+  }
+  if(d.innegociables){
+    partes.push(`\nTus innegociables son claros: ${d.innegociables.trim()} — y está bien que lo sean. No son exigencias excesivas, son la base mínima del respeto.`);
+  }
+  if(d.dealbreakers){
+    partes.push(`\nY tus dealbreakers: ${d.dealbreakers.trim()} — confía en esta lista. Si algo de esto aparece, no es 'una mala racha', es información.`);
+  }
+
+  // 6. Gottman
+  partes.push("\n\n── El amor de todos los días ──\n");
+  if(d.manejo_conflictos){
+    partes.push(`En cuanto a conflictos, esto es lo que necesitas: "${d.manejo_conflictos.trim()}"`);
+  }
+  if(d.domingo_ideal){
+    partes.push(`\nY tu domingo ideal junto a esta persona se ve así: "${d.domingo_ideal.trim()}" — guarda esta imagen, porque cuando la vivas, sabrás que vas por buen camino.`);
+  }
+  const rep=parseInt(d.reparacion||9);
+  if(rep>=8) partes.push("\nPara ti, reparar después de una discusión no es opcional — es esencial. Buscas a alguien que sepa volver, pedir perdón de verdad y reconectar.");
+
+  // 7. Carta
+  partes.push("\n\n── Una nota para ti ──\n");
+  if(d.carta_pareja){
+    partes.push(`Escribiste: "Quiero que mi pareja sea alguien que ${d.carta_pareja.trim()}"\n\nLee esto de nuevo. No suena a fantasía — suena a alguien que sabe exactamente lo que necesita para florecer.`);
+  } else {
+    partes.push("No completaste la carta final — pero te invitamos a volver y escribirla. A veces, poner en palabras lo que de verdad anhelas es el primer paso para reconocerlo cuando llegue (o cuando ya esté frente a ti).");
+  }
+
+  partes.push("\n\n" + PLANTILLAS.cierre[Math.floor(Math.random()*PLANTILLAS.cierre.length)]);
+
+  return partes.join("");
+}
+
+// ─── GENERAR PERFIL ───
+function generateSummary(){
   const data=gatherData();
   const thinking=document.getElementById('ai-thinking');
   const output=document.getElementById('summary-output');
-  thinking.classList.add('active'); output.innerHTML='';
 
-  const prompt=`Eres una coach de relaciones cálida, profunda y honesta — con voz latinoamericana. Una persona ha completado un ejercicio de reflexión llamado "Mi futuro Life Partner". Basándote en sus respuestas, escribe un perfil hermoso, personalizado y revelador de su pareja ideal.
+  thinking.classList.add('active');
+  output.innerHTML='';
 
-Escríbelo en segunda persona ("Tu pareja...") y en español colombiano natural — cálido, directo, sin cursilería. Usa sus respuestas reales, no cosas genéricas.
-
-Usa estas secciones con títulos simples (sin #, sin negrilla excesiva):
-
-1. La base emocional de tu relación
-2. Cómo te ama (y cómo quieres ser amada)
-3. La forma de amor que buscas
-4. En quién te conviertes a su lado
-5. Lo que esta persona representa
-6. El amor de todos los días
-7. Una nota para ti
-
-Máximo 2-3 párrafos por sección. Cierra con algo que inspire y mueva. Si hay cosas que no llenó, sé honesta y di que puede completar esa parte.
-
-Respuestas de la persona:
-Estilo de apego propio: ${data.estilo_apego||'No especificado'}
-Sensación de seguridad deseada: ${data.sensacion_seguridad||'No respondió'}
-Respuesta en momentos difíciles: ${data.respuesta_dificil||'No respondió'}
-Ser yo misma con esta persona: ${data.ser_yo_misma||'No respondió'}
-Independencia (1=muy fusionados, 10=muy independientes): ${data.independencia}/10
-Lenguajes del amor por orden de importancia: ${data.lenguajes_amor.join(' > ')}
-Momento cotidiano de amor: ${data.momento_amor||'No respondió'}
-Recuerdo de amor: ${data.recuerdo_amor||'No respondió'}
-Sternberg - Intimidad: ${data.sternberg_intimidad}/10, Pasión: ${data.sternberg_pasion}/10, Compromiso: ${data.sternberg_compromiso}/10
-Visión del compromiso: ${data.vision_compromiso||'No respondió'}
-En quién quiere convertirse: ${data.en_quien_me_convierto||'No respondió'}
-Qué trae la pareja: ${data.cualidades_pareja||'No respondió'}
-Experiencias compartidas: ${data.experiencias.join(', ')||'Ninguna seleccionada'}
-Fortalezas de carácter: ${data.fortalezas.join(', ')||'Ninguna seleccionada'}
-Innegociables: ${data.innegociables||'No respondió'}
-Dealbreakers: ${data.dealbreakers||'No respondió'}
-Manejo de conflictos: ${data.manejo_conflictos||'No respondió'}
-Domingo ideal: ${data.domingo_ideal||'No respondió'}
-Carta a la pareja: ${data.carta_pareja||'No respondió'}
-Gottman - Amistad: ${data.amistad_profunda}/10, Rituales: ${data.rituales}/10, Reparación: ${data.reparacion}/10, Sueños: ${data.suenos_compartidos}/10`;
-
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})
-    });
-    const json=await resp.json();
-    const text=json.content?.[0]?.text||'No se pudo generar el perfil. Intenta de nuevo.';
+  setTimeout(()=>{
+    const texto=generarPerfilTexto(data);
     thinking.classList.remove('active');
-    output.style.whiteSpace='pre-wrap'; output.textContent=text;
+    output.style.whiteSpace='pre-wrap';
+    output.textContent=texto;
     autoSave();
-  }catch(e){
-    thinking.classList.remove('active');
-    output.textContent='Error de conexión. Por favor intenta de nuevo.';
-  }
+    output.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 900);
+}
+
+// ─── PREPARAR PARA IMPRIMIR ───
+function prepareForPrint(){
+  document.querySelectorAll('textarea').forEach(ta=>{
+    let div = ta.nextElementSibling;
+    if(!div || !div.classList.contains('print-only')){
+      div = document.createElement('div');
+      div.className = 'print-only';
+      ta.parentNode.insertBefore(div, ta.nextSibling);
+    }
+    div.textContent = ta.value || '(sin respuesta)';
+  });
 }
 
 // ─── EXPORTAR ───
